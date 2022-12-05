@@ -93,38 +93,59 @@ export const scoreWord = (word) => {
 };
 
 export const highestScoreFrom = (words) => {
-  const [highestScoreList, highestScore] = getListOfHighScores(words);
+  let result = { word: "", score: 0 };
 
-  if (highestScoreList.length === 1) {
-    return { word: highestScoreList[0], score: highestScore };
-  } else if (highestScoreList.length > 1) {
-    for (const highScoreWord of highestScoreList) {
-      if (highScoreWord.length === 10) {
-        return { word: highScoreWord, score: highestScore };
+  for (const word of words) {
+    let wordScore = scoreWord(word);
+
+    if (result.score < wordScore) {
+      result.word = word;
+      result.score = wordScore;
+    } else if (result.score == wordScore) {
+      if (result.word.length === 10) {
+        result = result;
+      } else if (word.length === 10) {
+        result.word = word;
+      } else if (word.length < result.word.length) {
+        result.word = word;
       }
     }
-    const shortestWord = getShortestWord(highestScoreList);
-    return { word: shortestWord, score: highestScore };
   }
+  return result;
 };
+
+//   const [highestScoreList, highestScore] = getListOfHighScores(words);
+
+//   if (highestScoreList.length === 1) {
+//     return { word: highestScoreList[0], score: highestScore };
+//   } else if (highestScoreList.length > 1) {
+//     for (const highScoreWord of highestScoreList) {
+//       if (highScoreWord.length === 10) {
+//         return { word: highScoreWord, score: highestScore };
+//       }
+//     }
+//     const shortestWord = getShortestWord(highestScoreList);
+//     return { word: shortestWord, score: highestScore };
+//   }
+// };
 
 // highestScoreFrom() helper functions
-export const getShortestWord = (words) => {
-  return words.sort((a, b) => a.length - b.length)[0];
-};
+// export const getShortestWord = (words) => {
+//   return words.sort((a, b) => a.length - b.length)[0];
+// };
 
-export const getListOfHighScores = (words, score) => {
-  const wordScores = {};
-  words.forEach((word) => {
-    wordScores[word] = scoreWord(word);
-  });
-  const scores = Object.values(wordScores);
-  const highestScore = Math.max(...scores);
-  const highestScoreList = [];
-  for (const wordKey in wordScores) {
-    if (wordScores[wordKey] === highestScore) {
-      highestScoreList.push(wordKey);
-    }
-  }
-  return [highestScoreList, highestScore];
-};
+// export const getListOfHighScores = (words, score) => {
+//   const wordScores = {};
+//   words.forEach((word) => {
+//     wordScores[word] = scoreWord(word);
+//   });
+//   const scores = Object.values(wordScores);
+//   const highestScore = Math.max(...scores);
+//   const highestScoreList = [];
+//   for (const wordKey in wordScores) {
+//     if (wordScores[wordKey] === highestScore) {
+//       highestScoreList.push(wordKey);
+//     }
+//   }
+//   return [highestScoreList, highestScore];
+// };
